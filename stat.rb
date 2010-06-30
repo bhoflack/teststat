@@ -6,7 +6,7 @@ require 'rss/2.0'
 
 include Grit
 
-@repo = Repo.new("/home/brh/Work/java/pfus")
+@repo = Repo.new(ARGV[0])
 
 def blobs_for_tree(tree)
   blobs = []
@@ -24,7 +24,7 @@ end
 def files_for_commit(commit)
   files = []
   
-  @repo.commits(commit).each do |c|
+  @repo.commits("origin/" << commit).each do |c|
     files.concat(blobs_for_tree(c.tree))    
   end
 
@@ -67,7 +67,6 @@ def tests_for_issues(url)
   keys.each do |key|
     tests = modified_tests key
     puts "#{tests.size} test(s) modified for issue #{key}"
-    puts tests
 
     issues_with_test += 1 unless tests.size == 0
   end
@@ -76,6 +75,6 @@ def tests_for_issues(url)
   puts "#{issues_with_test} issue(s) with test => that is #{percentage.round}%"
 end
 
-tests_for_issues(ARGV[0])
+tests_for_issues(ARGV[1])
 
 
